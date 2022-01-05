@@ -34,8 +34,19 @@ namespace API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
             });
-            services.AddDbContext<DataContext>(opt => {
+            services.AddDbContext<DataContext>(opt =>
+            {
                 opt.UseSqlite(_config.GetConnectionString("DefaultConnection"));
+            });
+
+            // Added a service for Cors policies
+            services.AddCors(opt =>
+            {
+                // This policy is named 'CorsPolicy'. It is being used for a workaround for development purposes
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                });
             });
         }
 
@@ -52,6 +63,8 @@ namespace API
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
