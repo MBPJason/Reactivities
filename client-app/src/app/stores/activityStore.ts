@@ -20,7 +20,9 @@ export default class ActivityStore {
   }
 
   get groupedActivities() {
+    // Return an array of Objects
     return Object.entries(
+      // Reduces the initial array
       this.activitiesByDate.reduce((activities, activity) => {
         const date = activity.date;
         activities[date] = activities[date]
