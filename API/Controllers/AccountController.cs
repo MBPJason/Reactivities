@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using API.DTOs;
@@ -10,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace API.Controllers
 {
@@ -23,7 +21,7 @@ namespace API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
-         // Constructor for managing users, sign ins, and tokens
+        // Constructor for managing users, sign ins, and tokens
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
         {
             _tokenService = tokenService;
@@ -45,12 +43,7 @@ namespace API.Controllers
             // If password check passes return a UserDto with DisplayName, Image, and auth token
             if (result.Succeeded)
             {
-                return new UserDto
-                {
-                    DisplayName = user.DisplayName,
-                    Image = null,
-                    Token = "This will be a token",
-                };
+                return CreateUserObject(user);
             }
             // If password fails return Unauthorized response
             return Unauthorized();

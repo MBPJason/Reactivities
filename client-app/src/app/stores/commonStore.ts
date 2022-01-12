@@ -14,8 +14,10 @@ export default class CommonStore {
       (token) => {
         if (token) {
           window.localStorage.setItem("jwt", token);
+          console.log("Found token");
         } else {
           window.localStorage.removeItem("jwt");
+          console.log("Token not found");
         }
       }
     );
@@ -27,6 +29,7 @@ export default class CommonStore {
 
   setToken = (token: string | null) => {
     this.token = token;
+    console.log("Setting token")
   };
 
   setAppLoaded = () => {
