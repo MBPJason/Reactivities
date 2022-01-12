@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
+    // A Table layout for called Activity in our Database.
     public class Activity
     {
         public Guid Id { get; set; }

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -25,12 +27,14 @@ namespace API
 
             try
             {   
-                // Check to see if there is a database already
+                // Grab seed data of Activities
                 var context = services.GetRequiredService<DataContext>();
-                // If none exists build out a database
+                // Grab seed data of Users 
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                // If no database exists builds out database
                 await context.Database.MigrateAsync();
                 // Inject seed data, if needed
-                await Seed.SeedData(context);
+                await Seed.SeedData(context, userManager);
             }
             catch (Exception ex)
             {
