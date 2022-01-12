@@ -27,7 +27,7 @@ namespace API.Extensions
             // Assinging a Sign in manager for user collection
             .AddSignInManager<SignInManager<AppUser>>();
 
-            // Generate a key signatrue for our tokens. Points to dev appSettings for secret phrase.
+            // Generate a key signature for our tokens. Points to dev appSettings for secret phrase.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
             // A service to put our jwt into bearer hearder in our http requests
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,7 +42,7 @@ namespace API.Extensions
                             ValidateAudience = false
                         };
                     });
-                    // Adds TokenService cause it the token layout we ar using to this service
+                    // Adds TokenService cause it the token layout we are using for this service
                     services.AddScoped<TokenService>();
             // Return service to use in startup
             return services;
