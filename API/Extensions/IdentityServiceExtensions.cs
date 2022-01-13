@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using API.Services;
 using Domain;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
@@ -32,18 +34,26 @@ namespace API.Extensions
             // A service to put our jwt into bearer hearder in our http requests
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(opt =>
-                     {   
-                     // Adding validation options to our jwt
-                        opt.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = key,
-                            ValidateIssuer = false,
-                            ValidateAudience = false
-                        };
-                    });
-                    // Adds TokenService cause it the token layout we are using for this service
-                    services.AddScoped<TokenService>();
+                     {
+                         // Adding validation options to our jwt
+                         opt.TokenValidationParameters = new TokenValidationParameters
+                         {
+                             ValidateIssuerSigningKey = true,
+                             IssuerSigningKey = key,
+                             ValidateIssuer = false,
+                             ValidateAudience = false
+                         };
+                     });
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsActivityHost", policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+            // Adds TokenService cause it the token layout we are using for this service
+            services.AddScoped<TokenService>();
             // Return service to use in startup
             return services;
         }
